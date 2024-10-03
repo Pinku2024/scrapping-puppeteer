@@ -1,40 +1,31 @@
 const fs = require("fs");
 const retrievePuppeteer = require('./retrieve_puppeteer')
 
-// async function saveHtmlData(url, html, filename = 'html_data.csv') {
-//     try {
-//         if (!fs.existsSync(filename)) {
-//             fs.writeFileSync(filename, 'URL,HTML Content\n', 'utf8');
-//         }
-//         const escapedHtml = html.replace(/"/g, '""');
-//         const csvRow = `"${url}","${escapedHtml}"\n`;
-//         fs.appendFileSync(filename, csvRow, 'utf8');
 
-//         console.log(`Data for URL ${url} saved to ${filename}`);
-//     } catch (error) {
-//         console.error(`Failed to save data for URL ${url}:`, error);
-//     }
-// }
 
-async function saveHtmlData(url, innerText, filename = 'text_content.csv') {
+
+
+async function saveHtmlData(url, innerText, filename = 'text_content.tsv') {
     try {
         // Ensure the file exists, if not create it with headers
         if (!fs.existsSync(filename)) {
-            fs.writeFileSync(filename, 'URL,Text Content\n', 'utf8'); // CSV header
+            fs.writeFileSync(filename, 'URL\tText Content\n', 'utf8'); // TSV header
         }
 
-        // Escape double quotes in innerText to prevent breaking CSV format
-        const escapedText = innerText.replace(/"/g, '""');
+        // Escape tabs and newlines in the innerText to prevent breaking TSV format
+        const escapedText = innerText.replace(/\t/g, '    ').replace(/\n/g, ' '); // Replace tabs with spaces and newlines with spaces
 
-        // Create a CSV row with URL and inner text
-        const csvRow = `"${url}","${escapedText}"\n`;
-        fs.appendFileSync(filename, csvRow, 'utf8');
+        // Create a TSV row with URL and inner text
+        const tsvRow = `${url}\t${escapedText}\n`;
+        fs.appendFileSync(filename, tsvRow, 'utf8');
 
         console.log(`Data for URL ${url} saved to ${filename}`);
     } catch (error) {
         console.error(`Failed to save data for URL ${url}:`, error);
     }
 }
+
+
 
 
 
